@@ -1,6 +1,6 @@
 ---
 - name: Set up host
   hosts: all
-  become: yes
+  become: true
   roles:
     - role: ../../../ansible-pgbackrest
