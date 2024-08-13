@@ -34,11 +34,6 @@ pgbackrest_certificate_files:
   - "inventory/files/tls/pg1.key"
   - "inventory/files/tls/pg1.crt"
 
-pgbackrest_pg_host_users:
-  - name: postgres
-    group: postgres
-    password: ""
-
 #uncomment below then use *-host-type as ssh to switch to ssh
 #pgbackrest_ssh_pub_keys_to_import:
 #  - src_host: 192.168.15.22

@@ -21,11 +21,6 @@ pgbackrest_conf:
     content:
       compress-level: 3
 
-pgbackrest_pg_host_users:
-  - name: postgres
-    group: postgres
-    password: ""
-
 pgbackrest_ssh_pub_keys_to_import:
   - src_host: 192.168.15.25
     authorized_keys_path: "{{ pgbackrest_user_home }}/.ssh/authorized_keys"

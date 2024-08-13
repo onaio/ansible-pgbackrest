@@ -36,11 +36,6 @@ pgbackrest_certificate_files:
   - "inventory/files/tls/repo1.key"
   - "inventory/files/tls/repo1.crt"
 
-pgbackrest_repo_host_users:
-  - name: pgbackrest
-    group: pgbackrest
-    password: ""
-
 #uncomment below then use *-host-type as ssh to switch to ssh
 #pgbackrest_ssh_pub_keys_to_import:
 #  - src_host: 192.168.15.21
