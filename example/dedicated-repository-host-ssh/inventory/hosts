@@ -1,0 +1,6 @@
+pg1-host ansible_host=192.168.15.24
+repo1-host ansible_host=192.168.15.25
+
+[all]
+pg1-host
+repo1-host

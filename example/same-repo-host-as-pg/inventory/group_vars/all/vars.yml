@@ -57,7 +57,7 @@ pgbackrest_log_directory: /var/log/pgbackrest
 pgbackrest_create_user: true
 pgbackrest_user: postgres
 pgbackrest_user_group: postgres
-pgbackrest_user_password: postgres
+pgbackrest_user_password: ""
 pgbackrest_user_home: "/var/lib/postgresql"
 
 pgbackrest_is_pg_host: true

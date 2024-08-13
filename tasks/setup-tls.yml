@@ -1,0 +1,47 @@
+---
+- name: Set up tls | create pgbackrest cert directory
+  ansible.builtin.file:
+    path: "{{ pgbackrest_cert_directory }}"
+    state: directory
+    mode: '0750'
+    owner: "{{ pgbackrest_user }}"
+    group: "{{ pgbackrest_user_group }}"
+  tags:
+    - pgbackrest-set-up-tls-create-cert-directory
+    - pgbackrest-set-up-tls
+
+- name: Set up tls | import pgbackrest certificates
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ pgbackrest_cert_directory }}"
+    owner: "{{ pgbackrest_user }}"
+    group: "{{ pgbackrest_user_group }}"
+    mode: "0600"
+  with_items:
+    - "{{ pgbackrest_certificate_ca }}"
+    - "{{ pgbackrest_certificate_files }}"
+  tags:
+    - pgbackrest-set-up-tls-import-pgbackrest-certificates
+    - pgbackrest-set-up-tls
+
+- name: Set up tls | setup pgbackrest.service
+  ansible.builtin.template:
+    src: "{{ pgbackrest_service_template }}"
+    dest: "{{ pgbackrest_service_path }}"
+    owner: "{{ pgbackrest_user }}"
+    group: "{{ pgbackrest_user_group }}"
+    mode: 0640
+  tags:
+    - pgbackrest-set-up-tls-set-up-pgbackrest-service
+    - pgbackrest-set-up-tls
+
+- name: Set up tls | start pgbackrest.service
+  ansible.builtin.systemd_service:
+    state: started
+    daemon_reload: true
+    enabled: true
+    name: pgbackrest
+  tags:
+    - pgbackrest-set-up-tls-set-up-pgbackrest-service
+    - pgbackrest-set-up-tls-set-up-start-pgbackrest-service
+    - pgbackrest-set-up-tls

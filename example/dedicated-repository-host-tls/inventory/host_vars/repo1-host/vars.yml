@@ -1,5 +1,6 @@
 ---
 pgbackrest_is_repository_host: true
+pgbackrest_is_pg_host: false
 
 pgbackrest_stanza_conf:
   - name: main
@@ -40,11 +41,12 @@ pgbackrest_repo_host_users:
     group: pgbackrest
     password: ""
 
-pgbackrest_ssh_pub_keys_to_import:
-  - src_host: 192.168.15.21
-    authorized_keys_path: "{{ pgbackrest_user_home }}/.ssh/authorized_keys"
-    owner: "{{ pgbackrest_user }}"
-    group: "{{ pgbackrest_user_group }}"
+#uncomment below then use *-host-type as ssh to switch to ssh
+#pgbackrest_ssh_pub_keys_to_import:
+#  - src_host: 192.168.15.21
+#    authorized_keys_path: "{{ pgbackrest_user_home }}/.ssh/authorized_keys"
+#    owner: "{{ pgbackrest_user }}"
+#    group: "{{ pgbackrest_user_group }}"
 
 pgbackrest_cronjob:
   - name: pgbackrest_full_backup

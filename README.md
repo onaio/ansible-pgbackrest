@@ -6,7 +6,7 @@ Ansible role that installs and configures [pgbackrest](https://pgbackrest.org/).
 Requirements
 ------------
 
-- This role assumes that postgresql server has been set up and configured with archiving configurations enabled on the postgresql hosts.
+- This role assumes that postgresql server has been set up and configured with archiving configurations enabled on the postgresql hosts (pg-host).
 ````conf
 archive_command = 'pgbackrest --stanza=<stanza> archive-push %p'
 archive_mode = on
@@ -19,6 +19,8 @@ Role Variables
 --------------
 
 Check the [defaults/main.yml](./defaults/main.yml) file for the full list of default variables.
+> Ensure pgbackrest_is_pg_host and pgbackrest_is_repository_host are defined accordingly. 
+> They are both true by default, this supports the most basic set up i.e. one host for pg-host and repo-host. If more than one host is involved update the respective boolean configs.
 ````yaml
 ---
 pgbackrest_working_directory: /tmp/build
@@ -79,7 +81,7 @@ pgbackrest_log_directory: /var/log/pgbackrest
 pgbackrest_create_user: true
 pgbackrest_user: postgres
 pgbackrest_user_group: postgres
-pgbackrest_user_password: postgres
+pgbackrest_user_password: 
 pgbackrest_user_home: "/var/lib/postgresql"
 
 pgbackrest_is_pg_host: true
@@ -95,7 +97,7 @@ pgbackrest_temp_ssh_pub_key_export_directory: "/tmp/ansible-pgbackrest-ssh-keys"
 
 pgbackrest_ssh_pub_keys_to_import: []
 #  - src_host: 192.168.15.21
-#    authorized_keys_path: "{{ pgbackrest_user_home }}/.ssh/authorized_keys"
+#    authorized_keys_path: "{{ pgbackrest_user_home }}/.ssh/authorized_keys" # destination on current inventory_hostname
 #    owner: "{{ pgbackrest_user }}"
 #    group: "{{ pgbackrest_user_group }}"
 
@@ -152,7 +154,8 @@ Example Playbook
 ----------------
 
 Check for examples on the [example](./example) directory:
-- [dedicated-repository-host](./example/dedicated-repository-host) with tls.
+- [dedicated-repository-host-tls](./example/dedicated-repository-host-tls) with tls.
+- [dedicated-repository-host-ssh](./example/dedicated-repository-host-ssh) with ssh.
 - [same-repo-host-as-pg](./example/same-repo-host-as-pg).
 
 License

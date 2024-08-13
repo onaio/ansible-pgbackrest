@@ -71,6 +71,8 @@ pgbackrest_user_password: ""
 pgbackrest_user_create_home: true
 pgbackrest_user_home: "/home/{{ pgbackrest_user }}"
 pgbackrest_user_ssh_key_type: ed25519
+pgbackrest_user_ssh_key_size:
+#pgbackrest_user_ssh_key_passphrase: ""
 pgbackrest_user_generate_ssh_key: true
 pgbackrest_user_ssh_key_file: ".ssh/id_{{ pgbackrest_user_ssh_key_type }}"
 pgbackrest_user_ssh_pub_key_file: ".ssh/id_{{ pgbackrest_user_ssh_key_type }}.pub"

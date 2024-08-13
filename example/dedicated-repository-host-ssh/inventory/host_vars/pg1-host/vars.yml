@@ -11,7 +11,7 @@ pgbackrest_user_password: ""
 pgbackrest_stanza_conf:
   - name: main
     content:
-      repo1-host: 192.168.15.22
+      repo1-host: 192.168.15.25
       pg1-path: /var/lib/postgresql/14/main
       pg1-user: postgres
       repo1-host-user: pgbackrest
@@ -21,19 +21,6 @@ pgbackrest_conf:
   - name: global
     content:
       compress-level: 3
-      tls-server-address: "*"
-      tls-server-auth: 192.168.15.22=main
-      tls-server-ca-file: /etc/pgbackrest/cert/ca.crt
-      tls-server-cert-file: /etc/pgbackrest/cert/pg1.crt
-      tls-server-key-file: /etc/pgbackrest/cert/pg1.key
-      repo1-host-ca-file: /etc/pgbackrest/cert/ca.crt
-      repo1-host-cert-file: /etc/pgbackrest/cert/pg1.crt
-      repo1-host-key-file: /etc/pgbackrest/cert/pg1.key
-      repo1-host-type: tls
-
-pgbackrest_certificate_files:
-  - "inventory/files/tls/pg1.key"
-  - "inventory/files/tls/pg1.crt"
 
 pgbackrest_pg_host_users:
   - name: postgres
@@ -41,7 +28,7 @@ pgbackrest_pg_host_users:
     password: ""
 
 pgbackrest_ssh_pub_keys_to_import:
-  - src_host: 192.168.15.22
+  - src_host: 192.168.15.25
     authorized_keys_path: "{{ pgbackrest_user_home }}/.ssh/authorized_keys"
     owner: "{{ pgbackrest_user }}"
     group: "{{ pgbackrest_user_group }}"

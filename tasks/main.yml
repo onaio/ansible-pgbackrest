@@ -2,13 +2,14 @@
 # tasks file for role
 - name: Setup-user
   ansible.builtin.import_tasks: setup-user.yml
+  when: pgbackrest_create_user
   tags:
     - pgbackrest
     - pgbackrest-setup-user
 
 - name: Setup-ssh
   ansible.builtin.import_tasks: setup-ssh.yml
-  when: not pgbackrest_setup_certificate
+  when: not pgbackrest_setup_certificate and (not (pgbackrest_is_pg_host and pgbackrest_is_repository_host))
   tags:
     - pgbackrest
     - pgbackrest-setup-ssh
@@ -24,6 +25,13 @@
   tags:
     - pgbackrest
     - pgbackrest-configure
+
+- name: Setup-tls
+  ansible.builtin.import_tasks: setup-tls.yml
+  when: pgbackrest_setup_certificate
+  tags:
+    - pgbackrest
+    - pgbackrest-setup-tls
 
 - name: Post-install
   ansible.builtin.import_tasks: post-install.yml

@@ -3,7 +3,6 @@
   ansible.builtin.group:
     name: "{{ pgbackrest_user_group }}"
     state: present
-  when: pgbackrest_create_user
   tags:
     - pgbackrest-set-up-user-create-host-group
     - pgbackrest-set-up-user
@@ -16,10 +15,6 @@
     home: "{{ pgbackrest_user_home | default(omit) }}"
     password: "{{ pgbackrest_user_password }}"
     state: present
-    ssh_key_file: "{{ pgbackrest_user_ssh_key_file }}"
-    generate_ssh_key: "{{ pgbackrest_user_generate_ssh_key and not pgbackrest_setup_certificate }}"
-    ssh_key_type: "{{ pgbackrest_user_ssh_key_type }}"
-  when: pgbackrest_create_user
   tags:
     - pgbackrest-set-up-user-create-host-user
     - pgbackrest-set-up-user

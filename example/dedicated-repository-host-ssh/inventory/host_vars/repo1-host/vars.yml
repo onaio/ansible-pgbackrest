@@ -1,0 +1,46 @@
+---
+pgbackrest_is_repository_host: true
+pgbackrest_is_pg_host: false
+
+pgbackrest_stanza_conf:
+  - name: main
+    content:
+      pg1-host: 192.168.15.24
+      pg1-path: /var/lib/postgresql/14/main
+      repo1-block: y
+      repo1-bundle: y
+      compress-level: 3
+      repo1-path: /var/lib/pgbackrest
+      repo1-cipher-pass: zWaf6XtpjIVZC5444yXB+cgFDFl7MxGlgkZSaoPvTGirhPygu4jOKOXf9LO4vjfO
+      repo1-cipher-type: aes-256-cbc
+      repo1-retention-full: 1
+      log-level-file: detail
+      start-fast: y
+      pg1-host-user: postgres
+
+pgbackrest_conf:
+  - name: global
+    content:
+      compress-level: 3
+
+pgbackrest_repo_host_users:
+  - name: pgbackrest
+    group: pgbackrest
+    password: ""
+
+pgbackrest_ssh_pub_keys_to_import:
+  - src_host: 192.168.15.24
+    authorized_keys_path: "{{ pgbackrest_user_home }}/.ssh/authorized_keys"
+    owner: "{{ pgbackrest_user }}"
+    group: "{{ pgbackrest_user_group }}"
+
+pgbackrest_cronjob:
+  - name: pgbackrest_full_backup
+    minute: "10"
+    hour: "06"
+    day: "*"
+    month: "*"
+    weekday: "0"
+    user: pgbackrest
+    job: "pgbackrest --type=full --stanza=main backup"
+    cron_file: pgbackrest

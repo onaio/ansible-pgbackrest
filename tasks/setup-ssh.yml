@@ -20,10 +20,24 @@
     - pgbackrest-set-up-ssh-create-ssh-directory
     - pgbackrest-set-up-ssh
 
+- name: Set up ssh | generate an keypair
+  community.crypto.openssh_keypair:
+    path: "{{ pgbackrest_user_home }}/{{ pgbackrest_user_ssh_key_file }}"
+    size: "{{ pgbackrest_user_ssh_key_size }}"
+    type: "{{ pgbackrest_user_ssh_key_type }}"
+    owner: "{{ pgbackrest_user }}"
+    group: "{{ pgbackrest_user_group }}"
+    mode: 0600
+    passphrase: "{{ pgbackrest_user_ssh_key_passphrase | default(omit) }}"
+  when: pgbackrest_user_generate_ssh_key and not pgbackrest_setup_certificate
+  tags:
+    - pgbackrest-set-up-ssh-create-ssh-keypair
+    - pgbackrest-set-up-ssh
+
 - name: Set up ssh | fetch ssh public key from source host
   ansible.builtin.fetch:
     src: "{{ pgbackrest_user_home }}/{{ pgbackrest_user_ssh_pub_key_file }}"
-    dest: "{{ pgbackrest_temp_ssh_pub_key_export_directory }}/{{ inventory_hostname }}.pub"
+    dest: "{{ pgbackrest_temp_ssh_pub_key_export_directory }}/{{ ansible_host }}.pub"
     flat: true
   tags:
     - pgbackrest-set-up-ssh-fetch-public-ssh-key
