@@ -1,0 +1,61 @@
+---
+pgbackrest_is_pg_host: true
+pgbackrest_is_repository_host: false
+
+pgbackrest_create_user: true
+pgbackrest_user: postgres
+pgbackrest_user_group: postgres
+pgbackrest_user_home: "/var/lib/postgresql"
+pgbackrest_user_password: ""
+
+pgbackrest_stanza_conf:
+  - name: main
+    content:
+      repo1-host: 192.168.15.22
+      pg1-path: /var/lib/postgresql/14/main
+      pg1-user: postgres
+      repo1-host-user: pgbackrest
+      log-level-file: detail
+
+pgbackrest_conf:
+  - name: global
+    content:
+      compress-level: 3
+      tls-server-address: "*"
+      tls-server-auth: 192.168.15.22=main
+      tls-server-ca-file: /etc/pgbackrest/cert/ca.crt
+      tls-server-cert-file: /etc/pgbackrest/cert/pg1.crt
+      tls-server-key-file: /etc/pgbackrest/cert/pg1.key
+      repo1-host-ca-file: /etc/pgbackrest/cert/ca.crt
+      repo1-host-cert-file: /etc/pgbackrest/cert/pg1.crt
+      repo1-host-key-file: /etc/pgbackrest/cert/pg1.key
+      repo1-host-type: tls
+
+pgbackrest_certificate_files:
+  - "inventory/files/tls/pg1.key"
+  - "inventory/files/tls/pg1.crt"
+
+pgbackrest_pg_host_users:
+  - name: postgres
+    group: postgres
+    password: ""
+
+pgbackrest_ssh_pub_keys_to_import:
+  - src_host: 192.168.15.22
+    authorized_keys_path: "{{ pgbackrest_user_home }}/.ssh/authorized_keys"
+    owner: "{{ pgbackrest_user }}"
+    group: "{{ pgbackrest_user_group }}"
+
+pgbackrest_cronjob:
+  - name: pgbackrest_full_backup
+    minute: "10"
+    hour: "06"
+    day: "*"
+    month: "*"
+    weekday: "0"
+    user: "{{ pgbackrest_user }}"
+    job: "pgbackrest --type=full --stanza=main backup"
+    cron_file: pgbackrest
+
+pgbackrest_pgpass_entries:
+  - "locahost:5432:postgres:pgbackrest:pgbackrest"

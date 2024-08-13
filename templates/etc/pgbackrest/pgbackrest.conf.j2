@@ -1,0 +1,16 @@
+# {{ ansible_managed }}
+
+{%  for conf in pgbackrest_conf | default([]) %}
+[{{conf.name}}]
+{%  for key in conf.content %}
+{{ key }}={{ conf.content[key] }}
+{% endfor %}
+
+{% endfor %}
+{%  for stanza_conf in pgbackrest_stanza_conf  | default([])  %}
+[{{stanza_conf.name}}]
+{%  for key in stanza_conf.content %}
+{{ key }}={{ stanza_conf.content[key] }}
+{% endfor %}
+
+{% endfor %}

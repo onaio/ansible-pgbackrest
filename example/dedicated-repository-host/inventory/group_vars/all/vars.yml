@@ -1,0 +1,4 @@
+---
+pgbackrest_setup_certificate: true
+
+pgbackrest_certificate_ca: "inventory/files/tls/ca.crt"

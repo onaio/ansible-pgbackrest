@@ -1,0 +1,42 @@
+---
+- name: Set up ssh | install ssh
+  ansible.builtin.apt:
+    name:
+      - ssh
+    update_cache: true
+    state: present
+  tags:
+    - pgbackrest-set-up-ssh-install-ssh
+    - pgbackrest-set-up-ssh
+
+- name: Set up ssh | create ssh directory
+  ansible.builtin.file:
+    path: "{{ pgbackrest_user_home }}/.ssh"
+    state: directory
+    owner: "{{ pgbackrest_user }}"
+    group: "{{ pgbackrest_user_group }}"
+    mode: 0700
+  tags:
+    - pgbackrest-set-up-ssh-create-ssh-directory
+    - pgbackrest-set-up-ssh
+
+- name: Set up ssh | fetch ssh public key from source host
+  ansible.builtin.fetch:
+    src: "{{ pgbackrest_user_home }}/{{ pgbackrest_user_ssh_pub_key_file }}"
+    dest: "{{ pgbackrest_temp_ssh_pub_key_export_directory }}/{{ inventory_hostname }}.pub"
+    flat: true
+  tags:
+    - pgbackrest-set-up-ssh-fetch-public-ssh-key
+    - pgbackrest-set-up-ssh
+
+- name: Set up ssh | import public ssh keys
+  ansible.posix.authorized_key:
+    user: "{{ item.owner }}"
+    state: present
+    key: "{{ lookup('file', '{{ pgbackrest_temp_ssh_pub_key_export_directory }}/{{ item.src_host }}.pub') }}"
+    path: "{{ item.authorized_keys_path | default(omit) }}"
+  with_items:
+    - "{{ pgbackrest_ssh_pub_keys_to_import }}"
+  tags:
+    - pgbackrest-set-up-ssh-import-public-ssh-key
+    - pgbackrest-set-up-ssh

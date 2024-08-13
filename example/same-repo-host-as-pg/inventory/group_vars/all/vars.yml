@@ -1,25 +1,3 @@
-pgBackRest Ansible Role [![Build Status](https://github.com/onaio/ansible-role/workflows/CI/badge.svg)](https://github.com/onaio/ansible-role/actions?query=workflow%3ACI)
-=========
-
-Ansible role that installs and configures [pgbackrest](https://pgbackrest.org/).
-
-Requirements
-------------
-
-- This role assumes that postgresql server has been set up and configured with archiving configurations enabled on the postgresql hosts.
-````conf
-archive_command = 'pgbackrest --stanza=<stanza> archive-push %p'
-archive_mode = on
-max_wal_senders = 3
-wal_level = replica
-archive_timeout = <desired_timeout>
-````
-
-Role Variables
---------------
-
-Check the [defaults/main.yml](./defaults/main.yml) file for the full list of default variables.
-````yaml
 ---
 pgbackrest_working_directory: /tmp/build
 pgbackrest_version: 2.53
@@ -141,21 +119,3 @@ pgbackrest_cronjob:
     user: "{{ pgbackrest_user }}"
     job: "pgbackrest --type=diff --stanza=main backup"
     cron_file: pgbackrest
-````
-
-Dependencies
-------------
-
-N/A
-
-Example Playbook
-----------------
-
-Check for examples on the [example](./example) directory:
-- [dedicated-repository-host](./example/dedicated-repository-host) with tls.
-- [same-repo-host-as-pg](./example/same-repo-host-as-pg).
-
-License
--------
-
-Apache 2

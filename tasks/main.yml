@@ -1,2 +1,31 @@
 ---
 # tasks file for role
+- name: Setup-user
+  ansible.builtin.import_tasks: setup-user.yml
+  tags:
+    - pgbackrest
+    - pgbackrest-setup-user
+
+- name: Setup-ssh
+  ansible.builtin.import_tasks: setup-ssh.yml
+  tags:
+    - pgbackrest
+    - pgbackrest-setup-ssh
+
+- name: Install
+  ansible.builtin.import_tasks: install.yml
+  tags:
+    - pgbackrest
+    - pgbackrest-install
+
+- name: Configure
+  ansible.builtin.import_tasks: configure.yml
+  tags:
+    - pgbackrest
+    - pgbackrest-configure
+
+- name: Post-install
+  ansible.builtin.import_tasks: post-install.yml
+  tags:
+    - pgbackrest
+    - pgbackrest-clean-up
