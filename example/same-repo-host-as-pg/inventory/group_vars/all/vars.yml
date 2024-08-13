@@ -3,65 +3,15 @@
 pgbackrest_is_pg_host: true
 pgbackrest_is_repository_host: true
 
-pgbackrest_working_directory: /tmp/build
 pgbackrest_version: 2.53
 
-pgbackrest_git_repo_release_artifact_url: "https://github.com/pgbackrest/pgbackrest/archive/release/{{ pgbackrest_version }}.tar.gz"
-
+# user not created on pg-host, re-using postgres user created when setting up postgresql service
 pgbackrest_create_user: false
 pgbackrest_user: postgres
 pgbackrest_user_group: postgres
+pgbackrest_user_home: "/var/lib/postgresql"
 
-pgbackrest_conf_template: "etc/pgbackrest/pgbackrest.conf.j2"
-pgbackrest_config_path: "{{ pgbackrest_config_dir }}/pgbackrest.conf"
-pgbackrest_config_dir: "/etc/pgbackrest"
-pgbackrest_cert_directory: "{{ pgbackrest_config_dir }}/cert"
-
-pgbackrest_service_template: "etc/systemd/system/pgbackrest.service.j2"
-pgbackrest_service_path: "/etc/systemd/system/pgbackrest.service"
-
-pgbackrest_setup_certificate: false
-pgbackrest_certificate_ca:
-pgbackrest_certificate_files:
-
-pgbackrest_pre_install_packages:
-  - wget
-  - tar
-
-pgbackrest_install_packages:
-  - python3-distutils
-  - meson
-  - gcc
-  - libpq-dev
-  - libssl-dev
-  - libxml2-dev
-  - pkg-config
-  - liblz4-dev
-  - libzstd-dev
-  - libbz2-dev
-  - libz-dev
-  - libyaml-dev
-  - libssh2-1-dev
-
-pgbackrest_cleanup_packages:
-  - python3-distutils
-  - meson
-  - gcc
-  - libpq-dev
-  - libssl-dev
-  - libxml2-dev
-  - pkg-config
-  - liblz4-dev
-  - libzstd-dev
-  - libbz2-dev
-  - libz-dev
-  - libyaml-dev
-  - libssh2-1-dev
-
-pgbackrest_binary_dir: /usr/bin
-pgbackrest_log_directory: /var/log/pgbackrest
-
-pgbackrest_cleanup_after_setup: false
+pgbackrest_cleanup_after_setup: true
 
 pgbackrest_repo_directories:
   - /var/lib/pgbackrest
