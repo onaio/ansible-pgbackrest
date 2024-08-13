@@ -10,7 +10,7 @@
     - pgbackrest-configuration-create-log-directory
     - pgbackrest-configuration
 
-- name: Configuration | create pgbackrest repository directories
+- name: Configuration | create pgbackrest repository directory
   ansible.builtin.file:
     path: "{{ pgbackrest_repo_directory }}"
     state: directory
@@ -19,7 +19,7 @@
     group: "{{ pgbackrest_user_group }}"
   when: pgbackrest_is_repository_host
   tags:
-    - pgbackrest-configuration-create-repository-directories
+    - pgbackrest-configuration-create-repository-directory
     - pgbackrest-configuration
 
 - name: Configuration | create pgbackrest config directory

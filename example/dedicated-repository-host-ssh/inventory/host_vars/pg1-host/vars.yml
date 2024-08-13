@@ -38,5 +38,5 @@ pgbackrest_cronjob:
     job: "pgbackrest --type=full --stanza=main backup"
     cron_file: pgbackrest
 
-pgbackrest_pgpass_entries:
-  - "locahost:5432:postgres:pgbackrest:pgbackrest"
+#pgbackrest_pgpass_entries:
+#  - "locahost:5432:postgres:pgbackrest:pgbackrest"

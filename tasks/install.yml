@@ -43,7 +43,7 @@
 
 - name: Install | run meson set-up
   ansible.builtin.shell: |
-    meson setup {{ pgbackrest_working_directory }}/pgbackrest {{ pgbackrest_working_directory }}/pgbackrest-release-2.53
+    meson setup {{ pgbackrest_working_directory }}/pgbackrest {{ pgbackrest_working_directory }}/pgbackrest-release-{{ pgbackrest_version }}
   changed_when: true
   tags:
     - pgbackrest-install-meson-set-up
