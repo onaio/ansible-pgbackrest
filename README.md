@@ -1,4 +1,4 @@
-pgBackRest Ansible Role [![Build Status](https://github.com/onaio/ansible-role/workflows/CI/badge.svg)](https://github.com/onaio/ansible-role/actions?query=workflow%3ACI)
+pgBackRest Ansible Role [![CI](https://github.com/onaio/ansible-pgbackrest/actions/workflows/ci.yml/badge.svg)](https://github.com/onaio/ansible-pgbackrest/actions/workflows/ci.yml)
 =========
 
 Ansible role that installs and configures [pgbackrest](https://pgbackrest.org/).
