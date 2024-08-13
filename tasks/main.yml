@@ -8,6 +8,7 @@
 
 - name: Setup-ssh
   ansible.builtin.import_tasks: setup-ssh.yml
+  when: not pgbackrest_setup_certificate
   tags:
     - pgbackrest
     - pgbackrest-setup-ssh
