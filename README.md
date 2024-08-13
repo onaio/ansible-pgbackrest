@@ -75,7 +75,6 @@ pgbackrest_cleanup_packages:
   - libssh2-1-dev
 
 pgbackrest_binary_dir: /usr/bin
-pgbackrest_binary_download_url:
 pgbackrest_log_directory: /var/log/pgbackrest
 
 pgbackrest_create_user: true

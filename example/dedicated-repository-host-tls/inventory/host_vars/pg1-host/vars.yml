@@ -2,11 +2,10 @@
 pgbackrest_is_pg_host: true
 pgbackrest_is_repository_host: false
 
-pgbackrest_create_user: true
+pgbackrest_create_user: false
 pgbackrest_user: postgres
 pgbackrest_user_group: postgres
 pgbackrest_user_home: "/var/lib/postgresql"
-pgbackrest_user_password: ""
 
 pgbackrest_stanza_conf:
   - name: main
@@ -58,5 +57,5 @@ pgbackrest_cronjob:
     job: "pgbackrest --type=full --stanza=main backup"
     cron_file: pgbackrest
 
-pgbackrest_pgpass_entries:
-  - "locahost:5432:postgres:pgbackrest:pgbackrest"
+#pgbackrest_pgpass_entries:
+#  - "locahost:5432:postgres:pgbackrest:pgbackrest"

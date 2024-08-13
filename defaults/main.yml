@@ -1,5 +1,8 @@
 ---
-# Directory used for build task
+# defines the type of host
+pgbackrest_is_pg_host: true
+pgbackrest_is_repository_host: true
+
 pgbackrest_working_directory: /tmp/build
 
 pgbackrest_version: 2.53
@@ -11,10 +14,11 @@ pgbackrest_config_path: "{{ pgbackrest_config_dir }}/pgbackrest.conf"
 pgbackrest_config_dir: "/etc/pgbackrest"
 pgbackrest_cert_directory: "{{ pgbackrest_config_dir }}/cert"
 
-# pgbackrest created only when pgbackrest_setup_certificate is enabled
+# pgbackrest.service created only when pgbackrest_setup_certificate is true
 pgbackrest_service_template: "etc/systemd/system/pgbackrest.service.j2"
 pgbackrest_service_path: "/etc/systemd/system/pgbackrest.service"
 
+# tls configurations
 pgbackrest_setup_certificate: false
 pgbackrest_certificate_ca:  # "inventory/files/tls/ca.crt"
 pgbackrest_certificate_files: []
@@ -42,6 +46,7 @@ pgbackrest_install_packages:
   - libyaml-dev
   - libssh2-1-dev
 
+# apt packages to remove when pgbackrest_cleanup_after_setup is true
 pgbackrest_cleanup_packages:
   - python3-distutils
   - meson
@@ -57,13 +62,14 @@ pgbackrest_cleanup_packages:
   - libyaml-dev
   - libssh2-1-dev
 
+# directories to remove when pgbackrest_cleanup_after_setup is true
 pgbackrest_cleanup_directories:
   - "{{ pgbackrest_working_directory }}"
 
 pgbackrest_binary_dir: /usr/bin
-pgbackrest_binary_download_url:
 pgbackrest_log_directory: /var/log/pgbackrest
 
+# user configuration
 pgbackrest_create_user: true
 pgbackrest_user: pgbackrest
 pgbackrest_user_group: pgbackrest
@@ -74,36 +80,37 @@ pgbackrest_user_ssh_key_type: ed25519
 pgbackrest_user_ssh_key_size:
 # pgbackrest_user_ssh_key_passphrase: ""
 pgbackrest_user_generate_ssh_key: true
+
+# pgbackrest_user_ssh_key_file pair path "{{ pgbackrest_user_home }}/{{ pgbackrest_user_ssh_key_file }}"
 pgbackrest_user_ssh_key_file: ".ssh/id_{{ pgbackrest_user_ssh_key_type }}"
 pgbackrest_user_ssh_pub_key_file: ".ssh/id_{{ pgbackrest_user_ssh_key_type }}.pub"
 
+# creates .pgpass on home directory used when pg-host-user is different from 'postgres'
 pgbackrest_pgpass_entries: []
 #  - "hostname:port:database:username:password"
-
 pgbackrest_pgpass_path: "{{ pgbackrest_user_home }}/.pgpass"
 pgbackrest_pgpass_template: "postgresql/.pgpass"
 
-pgbackrest_is_pg_host: true
-
+# removes unneeded packages and directories used during installation process
 pgbackrest_cleanup_after_setup: true
-
-pgbackrest_is_repository_host: true
 
 pgbackrest_repo_directory: /var/lib/pgbackrest
 
+# used by ssh host-type
 pgbackrest_temp_ssh_pub_key_export_directory: "/tmp/ansible-pgbackrest-ssh-keys"
-
 pgbackrest_ssh_pub_keys_to_import: []
 #  - src_host: 192.168.15.21
 #    authorized_keys_path: "{{ pgbackrest_user_home }}/.ssh/authorized_keys"
 #    owner: "{{ pgbackrest_user }}"
 #    group: "{{ pgbackrest_user_group }}"
 
+# holds the stanza configuration on pgbackrest.conf
 pgbackrest_stanza_conf: []
 #  - name: main
 #    content:
 #      pg1-path: /var/lib/postgresql/13/main
 
+# holds the global configuration for pgbackrest.conf
 pgbackrest_conf:
   - name: global
     content:

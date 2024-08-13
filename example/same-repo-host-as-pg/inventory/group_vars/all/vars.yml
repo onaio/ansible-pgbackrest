@@ -1,8 +1,16 @@
 ---
+# defines the type of host
+pgbackrest_is_pg_host: true
+pgbackrest_is_repository_host: true
+
 pgbackrest_working_directory: /tmp/build
 pgbackrest_version: 2.53
 
 pgbackrest_git_repo_release_artifact_url: "https://github.com/pgbackrest/pgbackrest/archive/release/{{ pgbackrest_version }}.tar.gz"
+
+pgbackrest_create_user: false
+pgbackrest_user: postgres
+pgbackrest_user_group: postgres
 
 pgbackrest_conf_template: "etc/pgbackrest/pgbackrest.conf.j2"
 pgbackrest_config_path: "{{ pgbackrest_config_dir }}/pgbackrest.conf"
@@ -51,31 +59,12 @@ pgbackrest_cleanup_packages:
   - libssh2-1-dev
 
 pgbackrest_binary_dir: /usr/bin
-pgbackrest_binary_download_url:
 pgbackrest_log_directory: /var/log/pgbackrest
-
-pgbackrest_create_user: true
-pgbackrest_user: postgres
-pgbackrest_user_group: postgres
-pgbackrest_user_password: ""
-pgbackrest_user_home: "/var/lib/postgresql"
-
-pgbackrest_is_pg_host: true
 
 pgbackrest_cleanup_after_setup: false
 
-pgbackrest_is_repository_host: true
-
 pgbackrest_repo_directories:
   - /var/lib/pgbackrest
-
-pgbackrest_temp_ssh_pub_key_export_directory: "/tmp/ansible-pgbackrest-ssh-keys"
-
-pgbackrest_ssh_pub_keys_to_import: []
-#  - src_host: 192.168.15.21
-#    authorized_keys_path: "{{ pgbackrest_user_home }}/.ssh/authorized_keys"
-#    owner: "{{ pgbackrest_user }}"
-#    group: "{{ pgbackrest_user_group }}"
 
 pgbackrest_stanza_conf:
   - name: main
