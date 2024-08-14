@@ -19,15 +19,38 @@
     - pgbackrest-install-create-working-directory
     - pgbackrest-install
 
-- name: Install | fetch and extract release
-  ansible.builtin.shell: |
-    set -e -o pipefail
-    wget -q -O - {{ pgbackrest_git_repo_release_artifact_url }} | tar zx -C {{ pgbackrest_working_directory }}
-  changed_when: true
-  args:
-    executable: /bin/bash
+- name: Install | fetch release
+  ansible.builtin.get_url:
+    url: "{{ pgbackrest_git_repo_release_artifact_url }}"
+    dest: "{{ pgbackrest_working_directory }}/{{ pgbackrest_release_file }}"
+    owner: "{{ pgbackrest_user }}"
+    group: "{{ pgbackrest_user_group }}"
+    mode: '0600'
   tags:
-    - pgbackrest-install-fetch-and-extract-release
+    - pgbackrest-install-fetch-release
+    - pgbackrest-install
+
+- name: Install | create pgbackrest extract directory
+  ansible.builtin.file:
+    path: "{{ pgbackrest_release_extract_directory }}"
+    state: directory
+    mode: '0600'
+  tags:
+    - pgbackrest-install-create-pgbackrest-extract-directory
+    - pgbackrest-install
+
+- name: Install | extract release
+  ansible.builtin.unarchive:
+    src: "{{ pgbackrest_working_directory }}/{{ pgbackrest_release_file }}"
+    dest: "{{ pgbackrest_release_extract_directory }}"
+    owner: "{{ pgbackrest_user }}"
+    group: "{{ pgbackrest_user_group }}"
+    mode: '0600'
+    extra_opts:
+      - '--strip-components=1'
+    remote_src: true
+  tags:
+    - pgbackrest-install-extract-release
     - pgbackrest-install
 
 - name: Install | install packages
@@ -43,7 +66,7 @@
 
 - name: Install | run meson set-up
   ansible.builtin.shell: |
-    meson setup {{ pgbackrest_working_directory }}/pgbackrest {{ pgbackrest_working_directory }}/pgbackrest-release-{{ pgbackrest_version }}
+    meson setup {{ pgbackrest_working_directory }}/pgbackrest {{ pgbackrest_release_extract_directory }}
   changed_when: true
   tags:
     - pgbackrest-install-meson-set-up

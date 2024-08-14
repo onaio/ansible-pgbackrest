@@ -8,6 +8,8 @@ pgbackrest_working_directory: /tmp/build
 pgbackrest_version: 2.53
 
 pgbackrest_git_repo_release_artifact_url: "https://github.com/pgbackrest/pgbackrest/archive/release/{{ pgbackrest_version }}.tar.gz"
+pgbackrest_release_file: "pgbackrest-release-{{ pgbackrest_version }}.tar.gz"
+pgbackrest_release_extract_directory: "{{ pgbackrest_working_directory }}/pgbackrest-release-{{ pgbackrest_version }}"
 
 pgbackrest_conf_template: "etc/pgbackrest/pgbackrest.conf.j2"
 pgbackrest_config_path: "{{ pgbackrest_config_dir }}/pgbackrest.conf"
