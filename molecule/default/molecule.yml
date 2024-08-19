@@ -4,16 +4,30 @@ dependency:
 driver:
   name: docker
 platforms:
-  - name: ansible-role-ubuntu-18.04
-    image: solita/ubuntu-systemd:18.04
-    dockerfile: Dockerfile.j2
+  - name: instance
+    image: geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2204}-ansible:latest
     privileged: true
     command: /sbin/init
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns_mode: host
+    env:
+      LC_ALL: "C.UTF-8"
+      LANG: "C.UTF-8"
 provisioner:
   name: ansible
-lint: |
-  set -e
-  yamllint .
-  ansible-lint .
+scenario:
+  name: default
+  test_sequence:
+    - dependency
+    - cleanup
+    - destroy
+    - syntax
+    - create
+    - prepare
+    - converge
+    - verify
+    - cleanup
+    - destroy
 verifier:
-  name: ansible
+  name: testinfra

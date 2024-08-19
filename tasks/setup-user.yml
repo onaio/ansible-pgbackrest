@@ -1,0 +1,20 @@
+---
+- name: Set up user | create linux group
+  ansible.builtin.group:
+    name: "{{ pgbackrest_user_group }}"
+    state: present
+  tags:
+    - pgbackrest-set-up-user-create-host-group
+    - pgbackrest-set-up-user
+
+- name: Set up user | create linux user
+  ansible.builtin.user:
+    name: "{{ pgbackrest_user }}"
+    group: "{{ pgbackrest_user_group }}"
+    create_home: "{{ pgbackrest_user_create_home }}"
+    home: "{{ pgbackrest_user_home | default(omit) }}"
+    password: "{{ pgbackrest_user_password }}"
+    state: present
+  tags:
+    - pgbackrest-set-up-user-create-host-user
+    - pgbackrest-set-up-user

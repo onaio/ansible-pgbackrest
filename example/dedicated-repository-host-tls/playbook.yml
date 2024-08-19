@@ -1,0 +1,6 @@
+---
+- name: Set Up host
+  hosts: pg1-host,repo1-host
+  become: true
+  roles:
+    - role: ../../../ansible-pgbackrest

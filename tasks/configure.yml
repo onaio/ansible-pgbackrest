@@ -1,0 +1,74 @@
+---
+- name: Configuration | create pgbackrest log directory
+  ansible.builtin.file:
+    path: "{{ pgbackrest_log_directory }}"
+    state: directory
+    mode: '0770'
+    owner: "{{ pgbackrest_user }}"
+    group: "{{ pgbackrest_user_group }}"
+  tags:
+    - pgbackrest-configuration-create-log-directory
+    - pgbackrest-configuration
+
+- name: Configuration | create pgbackrest repository directory
+  ansible.builtin.file:
+    path: "{{ pgbackrest_repo_directory }}"
+    state: directory
+    mode: '0750'
+    owner: "{{ pgbackrest_user }}"
+    group: "{{ pgbackrest_user_group }}"
+  when: pgbackrest_is_repository_host
+  tags:
+    - pgbackrest-configuration-create-repository-directory
+    - pgbackrest-configuration
+
+- name: Configuration | create pgbackrest config directory
+  ansible.builtin.file:
+    path: "{{ pgbackrest_config_dir }}"
+    state: directory
+    mode: '0750'
+    owner: "{{ pgbackrest_user }}"
+    group: "{{ pgbackrest_user_group }}"
+  tags:
+    - pgbackrest-configuration-create-config-directory
+    - pgbackrest-configuration
+
+- name: Configuration | update pgbackrest.conf
+  ansible.builtin.template:
+    src: "{{ pgbackrest_conf_template }}"
+    dest: "{{ pgbackrest_config_path }}"
+    owner: "{{ pgbackrest_user }}"
+    group: "{{ pgbackrest_user_group }}"
+    mode: 0640
+  tags:
+    - pgbackrest-configuration-update-conf
+    - pgbackrest-configuration
+
+- name: Configuration | create pgpass file
+  ansible.builtin.template:
+    src: "{{ pgbackrest_pgpass_template }}"
+    dest: "{{ pgbackrest_pgpass_path }}"
+    owner: "{{ pgbackrest_user }}"
+    group: "{{ pgbackrest_user_group }}"
+    mode: 0600
+  when: pgbackrest_pgpass_entries | length > 0
+  tags:
+    - pgbackrest-configuration-create-pgpass
+    - pgbackrest-configuration
+
+- name: Configuration | creates a cron file under /etc/cron.d on host
+  ansible.builtin.cron:
+    name: "{{ item.name }}"
+    minute: "{{ item.minute }}"
+    hour: "{{ item.hour }}"
+    day: "{{ item.day }}"
+    month: "{{ item.month }}"
+    weekday: "{{ item.weekday }}"
+    user: "{{ item.user }}"
+    job: "{{ item.job }}"
+    cron_file: "{{ item.cron_file }}"
+  with_items:
+    - "{{ pgbackrest_cronjob }}"
+  tags:
+    - pgbackrest-configuration-run-create-cronjob
+    - pgbackrest-configuration

@@ -1,0 +1,22 @@
+---
+- name: Post-install | delete build files
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  when: pgbackrest_cleanup_after_setup
+  with_items:
+    - "{{ pgbackrest_cleanup_directories }}"
+  tags:
+    - pgbackrest-post-install-delete-directories
+    - pgbackrest-post-install
+
+- name: Post-install | remove unneeded packages
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: absent
+  when: pgbackrest_cleanup_after_setup
+  with_items:
+    - "{{ pgbackrest_cleanup_packages }}"
+  tags:
+    - pgbackrest-post-install-delete-packages
+    - pgbackrest-post-install

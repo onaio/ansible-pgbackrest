@@ -1,0 +1,91 @@
+---
+- name: Install | pre-install packages
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: true
+  with_items:
+    - "{{ pgbackrest_pre_install_packages }}"
+  tags:
+    - pgbackrest-install-pre-install-packages
+    - pgbackrest-install
+
+- name: Install | create pgbackrest working directory
+  ansible.builtin.file:
+    path: "{{ pgbackrest_working_directory }}"
+    state: directory
+    mode: '0755'
+  tags:
+    - pgbackrest-install-create-working-directory
+    - pgbackrest-install
+
+- name: Install | fetch release
+  ansible.builtin.get_url:
+    url: "{{ pgbackrest_git_repo_release_artifact_url }}"
+    dest: "{{ pgbackrest_working_directory }}/{{ pgbackrest_release_file }}"
+    owner: "{{ pgbackrest_user }}"
+    group: "{{ pgbackrest_user_group }}"
+    mode: '0600'
+  tags:
+    - pgbackrest-install-fetch-release
+    - pgbackrest-install
+
+- name: Install | create pgbackrest extract directory
+  ansible.builtin.file:
+    path: "{{ pgbackrest_release_extract_directory }}"
+    state: directory
+    mode: '0600'
+  tags:
+    - pgbackrest-install-create-pgbackrest-extract-directory
+    - pgbackrest-install
+
+- name: Install | extract release
+  ansible.builtin.unarchive:
+    src: "{{ pgbackrest_working_directory }}/{{ pgbackrest_release_file }}"
+    dest: "{{ pgbackrest_release_extract_directory }}"
+    owner: "{{ pgbackrest_user }}"
+    group: "{{ pgbackrest_user_group }}"
+    mode: '0600'
+    extra_opts:
+      - '--strip-components=1'
+    remote_src: true
+  tags:
+    - pgbackrest-install-extract-release
+    - pgbackrest-install
+
+- name: Install | install packages
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: true
+  with_items:
+    - "{{ pgbackrest_install_packages }}"
+  tags:
+    - pgbackrest-install-packages
+    - pgbackrest-install
+
+- name: Install | run meson set-up
+  ansible.builtin.shell: |
+    meson setup {{ pgbackrest_working_directory }}/pgbackrest {{ pgbackrest_release_extract_directory }}
+  changed_when: true
+  tags:
+    - pgbackrest-install-meson-set-up
+    - pgbackrest-install
+
+- name: Install | run ninja set-up
+  ansible.builtin.shell: |
+    ninja -C {{ pgbackrest_working_directory }}/pgbackrest
+  changed_when: true
+  tags:
+    - pgbackrest-install-ninja-set-up
+    - pgbackrest-install
+
+- name: Install | setup pgbackrest binary
+  ansible.builtin.copy:
+    remote_src: true
+    src: "{{ pgbackrest_working_directory }}/pgbackrest/src/pgbackrest"
+    dest: "{{ pgbackrest_binary_dir }}"
+    mode: "0755"
+  tags:
+    - pgbackrest-install-set-up-pgbackrest-binary
+    - pgbackrest-install
