@@ -39,6 +39,8 @@ pgbackrest_user_home: "/var/lib/postgresql"
 
 pgbackrest_cleanup_after_setup: true
 
+pgbackrest_repo_directory: /var/lib/pgbackrest
+
 pgbackrest_stanza_conf:
   - name: main
     content:

@@ -96,6 +96,7 @@ pgbackrest_pgpass_template: "postgresql/.pgpass"
 # removes unneeded packages and directories used during installation process
 pgbackrest_cleanup_after_setup: true
 
+# creates the repo(n)-path (e.g. repo1-path) directory
 pgbackrest_repo_directory: /var/lib/pgbackrest
 
 # used by ssh host-type
